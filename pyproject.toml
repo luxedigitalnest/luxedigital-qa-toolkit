@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "luxedigital-qa-toolkit"
+version = "1.0.0"
+description = "Local-first QA tools for digital-product delivery packages."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "LuxeDigitalNest"}]
+keywords = ["etsy", "digital-products", "qa", "quality-assurance", "png", "zip", "seller-tools"]
+dependencies = ["Pillow>=10.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+ldqa = "luxedigital_qa.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
