@@ -2,13 +2,13 @@
 
 Open-source quality assurance tools for Etsy and other digital-product sellers.
 
-**LuxeDigital QA Toolkit** scans a digital delivery folder or ZIP before publication and flags common customer-experience problems: confusing filenames, missing files, oversized packages, weak image resolution, suspicious empty files, and delivery-readiness issues.
+**LuxeDigital QA Toolkit** scans a digital delivery folder or ZIP before publication and flags common customer-experience problems: confusing filenames, missing files, oversized packages, weak image resolution, suspicious empty files, PDF problems, SVG scaling issues, and delivery-readiness risks.
 
 The goal is simple: **catch preventable mistakes before the customer downloads them.**
 
 ## Why this exists
 
-Digital sellers often assemble PNGs, PDFs, SVGs, ZIP archives, Canva access instructions, and bonus files manually. A single bad filename, empty export, low-resolution image, or poorly structured ZIP can create support messages, refunds, and bad reviews.
+Digital sellers often assemble PNGs, PDFs, SVGs, ZIP archives, template instructions, and bonus files manually. A single broken export, encrypted PDF, missing SVG viewBox, low-resolution image, or poorly structured ZIP can create support messages, refunds, and bad reviews.
 
 This project provides a transparent, local-first QA layer that anyone can use or improve.
 
@@ -17,16 +17,21 @@ This project provides a transparent, local-first QA layer that anyone can use or
 - Scan a folder or ZIP file
 - Inventory all delivery files
 - Detect zero-byte and suspiciously tiny files
-- Check filename quality
+- Check filename quality and duplicate content
 - Flag deeply nested folders
 - Inspect PNG/JPG/WebP dimensions with Pillow
-- Estimate print size at 300 DPI
+- Estimate raster print size at 300 DPI
+- Validate PDFs, page counts, page dimensions, and encryption state
+- Parse SVGs safely and validate viewBox values
+- Warn when SVG files contain raster imagery
 - Detect unusually large individual files and packages
 - Generate Markdown and JSON QA reports
 - Exit with a non-zero status when errors are found
-- Works locally; customer files are not uploaded anywhere
+- Runs locally; customer files are not uploaded anywhere
 
-## Quick start
+## Install
+
+From source:
 
 ```bash
 git clone https://github.com/luxedigitalnest/luxedigital-qa-toolkit.git
@@ -35,10 +40,21 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
 pip install -e .
+```
+
+Once published to PyPI, installation will be:
+
+```bash
+pip install luxedigital-qa-toolkit
+```
+
+## Usage
+
+```bash
 ldqa scan ./your-product-folder
 ```
 
-Or scan a ZIP:
+Or scan a ZIP and save reports:
 
 ```bash
 ldqa scan ./delivery.zip --report qa-report.md --json-report qa-report.json
@@ -48,25 +64,37 @@ ldqa scan ./delivery.zip --report qa-report.md --json-report qa-report.json
 
 | Check | Purpose |
 |---|---|
-| Empty files | Prevent broken downloads |
-| Tiny files | Catch failed or incomplete exports |
+| Empty/tiny files | Catch failed exports |
 | Filename quality | Reduce buyer confusion |
-| Nested folders | Keep delivery packages easy to navigate |
-| Image dimensions | Catch low-resolution exports |
-| 300-DPI print estimate | Show realistic print dimensions |
-| Large files | Surface download friction |
-| Package size | Flag unwieldy deliveries |
 | Duplicate names/content | Prevent ambiguous or redundant files |
+| Nested folders | Keep packages easy to navigate |
+| Raster dimensions | Catch low-resolution exports |
+| 300-DPI estimate | Show realistic print dimensions |
+| PDF readability | Catch corrupt deliverables |
+| PDF page metadata | Verify pages and dimensions |
+| PDF encryption | Flag unexpected buyer access friction |
+| SVG parsing | Catch malformed vector files |
+| SVG viewBox | Improve predictable scaling |
+| Embedded raster in SVG | Flag vectors that may lose sharpness |
+| File/package size | Surface download friction |
+
+## Development
+
+```bash
+pip install -e ".[dev]"
+pytest
+python -m build
+```
+
+GitHub Actions runs the test suite on supported Python versions for pushes and pull requests.
 
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md).
 
-Planned areas include SVG validation, PDF page/dimension checks, Canva-delivery checks, configurable marketplace packaging profiles, accessibility guidance, and a browser-based report viewer.
-
 ## Contributing
 
-Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md). Issues that are small and clearly scoped are intentionally kept available for first-time contributors.
 
 ## Privacy
 
