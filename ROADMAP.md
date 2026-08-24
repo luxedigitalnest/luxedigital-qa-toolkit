@@ -11,10 +11,12 @@
 - [x] Automated tests
 
 ## v1.1 — PDF + SVG
-- [ ] PDF page count and dimensions
-- [ ] Broken/encrypted PDF detection
-- [ ] SVG parse and viewBox validation
-- [ ] Embedded-raster warnings
+- [x] PDF page count and dimensions
+- [x] Broken/encrypted PDF detection
+- [x] SVG parse and viewBox validation
+- [x] Embedded-raster warnings
+- [x] Multi-version GitHub Actions CI
+- [x] PyPI-ready packaging metadata
 
 ## v1.2 — Seller profiles
 - [ ] Config file
@@ -33,5 +35,5 @@
 ## v2.0 — Interactive reporting
 - [ ] Local HTML report
 - [ ] Drag-and-drop local web UI
-- [ ] GitHub Action for automated QA
+- [ ] Reusable GitHub Action for package QA
 - [ ] Plugin architecture
