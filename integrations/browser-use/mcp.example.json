@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "browser-use": {
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\ABSOLUTE\\PATH\\TO\\luxedigital-qa-toolkit\\integrations\\browser-use\\start-mcp.ps1"
+      ]
+    }
+  }
+}

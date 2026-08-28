@@ -1,0 +1,12 @@
+[project]
+name = "ldn-sales-browser-use"
+version = "0.1.0"
+description = "Optional Browser Use layer for the LDN Sales Channel OS workflow."
+requires-python = "==3.12.*"
+dependencies = [
+  "browser-use[cli]==0.11.2",
+  "python-dotenv==1.1.1",
+]
+
+[tool.uv]
+package = false

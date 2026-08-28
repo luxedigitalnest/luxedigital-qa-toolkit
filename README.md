@@ -88,6 +88,10 @@ python -m build
 
 GitHub Actions runs the test suite on supported Python versions for pushes and pull requests.
 
+## Optional Browser Use integration
+
+The isolated [Browser Use setup](docs/browser-use.md) adds an agentic browser option for the LDN Sales Channel OS workflow without changing this package or replacing deterministic Playwright automation. It includes a pinned Python 3.12/`uv` environment, Windows bootstrap and MCP launcher, secret-safe health check, and read-only public-page demo.
+
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md).
