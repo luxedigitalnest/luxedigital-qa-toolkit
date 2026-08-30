@@ -7,7 +7,16 @@ import json
 import os
 from pathlib import Path
 
-from browser_use import Agent, Browser, ChatBrowserUse
+from browser_use import (
+    Agent,
+    Browser,
+    ChatAnthropic,
+    ChatAzureOpenAI,
+    ChatBrowserUse,
+    ChatGoogle,
+    ChatGroq,
+    ChatOpenAI,
+)
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +26,26 @@ DISALLOWED_SCHEMES = ("file:", "data:", "javascript:", "about:", "chrome:")
 def security_enabled() -> bool:
     value = os.getenv("BROWSER_USE_DISABLE_SECURITY", "false").strip().lower()
     return value not in {"1", "true", "yes", "on"}
+
+
+def build_llm():
+    """Choose one explicitly configured native Browser Use model provider."""
+    model = os.getenv("BROWSER_USE_LLM_MODEL", "").strip()
+    if os.getenv("BROWSER_USE_API_KEY"):
+        return ChatBrowserUse(model=model) if model else ChatBrowserUse()
+    if os.getenv("OPENAI_API_KEY"):
+        return ChatOpenAI(model=model or "gpt-5")
+    if os.getenv("ANTHROPIC_API_KEY"):
+        return ChatAnthropic(model=model or "claude-sonnet-4-6")
+    if os.getenv("GOOGLE_API_KEY"):
+        return ChatGoogle(model=model or "gemini-2.5-flash")
+    if os.getenv("GROQ_API_KEY"):
+        return ChatGroq(model=model or "meta-llama/llama-4-maverick-17b-128e-instruct")
+    if os.getenv("AZURE_OPENAI_API_KEY") and os.getenv("AZURE_OPENAI_ENDPOINT"):
+        return ChatAzureOpenAI(model=model or "o4-mini")
+    raise SystemExit(
+        "Configure BROWSER_USE_API_KEY or one supported provider key before running the demo"
+    )
 
 
 async def run() -> None:
@@ -53,7 +82,7 @@ async def run() -> None:
             "open another origin, or mutate browser/account state. "
             "Return JSON with exactly the string fields heading and url."
         ),
-        llm=ChatBrowserUse(),
+        llm=build_llm(),
         browser=browser,
         use_vision=False,
     )
