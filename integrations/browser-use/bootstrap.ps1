@@ -17,12 +17,21 @@ if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
 
 uv python install 3.12
 uv sync
-uv run browser-use install chromium
+uv run browser-use install
 
 if (-not (Test-Path ".env")) {
     Copy-Item ".env.example" ".env"
     Write-Host "Created integrations\browser-use\.env. Add one model-provider API key locally; do not commit it."
 }
 
-uv run python scripts\health_check.py
-Write-Host "Browser Use setup complete."
+# First-party diagnostics plus our secret-safe structural checks. Credentials are
+# intentionally optional during bootstrap so a fresh install can complete before
+# the owner edits .env.
+uv run browser-use --doctor
+uv run python scripts\health_check.py --skip-credentials
+
+Write-Host "Browser Use runtime setup complete."
+Write-Host "Next: add one provider key to .env, then run:"
+Write-Host "  uv run python scripts\health_check.py"
+Write-Host "  uv run python scripts\safe_demo.py"
+Write-Host "Optional coding-agent skill: uv run browser-use skill install"
