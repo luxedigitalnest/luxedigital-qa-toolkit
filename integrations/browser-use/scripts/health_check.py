@@ -12,15 +12,6 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-PROVIDER_KEYS = (
-    "BROWSER_USE_API_KEY",
-    "OPENAI_API_KEY",
-    "ANTHROPIC_API_KEY",
-    "GOOGLE_API_KEY",
-    "GEMINI_API_KEY",
-    "GROQ_API_KEY",
-    "AZURE_OPENAI_API_KEY",
-)
 
 
 def report(ok: bool, label: str, detail: str) -> bool:
@@ -41,6 +32,23 @@ def load_local_env(path: Path) -> None:
         value = value.strip().strip("'\"")
         if key and value:
             os.environ.setdefault(key, value)
+
+
+def configured_providers() -> list[str]:
+    providers: list[str] = []
+    if os.environ.get("BROWSER_USE_API_KEY"):
+        providers.append("BROWSER_USE_API_KEY")
+    if os.environ.get("OPENAI_API_KEY"):
+        providers.append("OPENAI_API_KEY")
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        providers.append("ANTHROPIC_API_KEY")
+    if os.environ.get("GOOGLE_API_KEY"):
+        providers.append("GOOGLE_API_KEY")
+    if os.environ.get("GROQ_API_KEY"):
+        providers.append("GROQ_API_KEY")
+    if os.environ.get("AZURE_OPENAI_API_KEY") and os.environ.get("AZURE_OPENAI_ENDPOINT"):
+        providers.append("AZURE_OPENAI_API_KEY + AZURE_OPENAI_ENDPOINT")
+    return providers
 
 
 def parse_args() -> argparse.Namespace:
@@ -96,7 +104,7 @@ def main() -> int:
         if not args.skip_credentials:
             results.append(doctor_ok)
 
-    configured = [key for key in PROVIDER_KEYS if os.environ.get(key)]
+    configured = configured_providers()
     if args.skip_credentials:
         report(
             bool(configured),
